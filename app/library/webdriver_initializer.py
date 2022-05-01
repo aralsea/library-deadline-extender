@@ -1,4 +1,4 @@
-import chromedriver_binary  # noqa
+# import chromedriver_binary  # noqa
 from selenium import webdriver
 
 
@@ -20,7 +20,7 @@ def init_webdriver():
     # Selenium Server に接続する
     print("connectiong to remote browser...")
     driver = webdriver.Chrome(
-        # executable_path=driver_path,
+        executable_path=driver_path,
         options=options,
     )
     return driver

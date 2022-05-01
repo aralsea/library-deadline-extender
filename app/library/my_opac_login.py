@@ -36,7 +36,6 @@ def move_to_my_opac_stats(driver):
     my_opac_buttun = driver.find_element(by=By.XPATH, value="//*[@id='us_service']")
     my_opac_buttun.click()
     time.sleep(3)
-
     my_opac_my_datum = driver.find_element(
         by=By.XPATH,
         value="//*[@id='us_service-menu']/li/div/div/ul[1]/li[1]/a",

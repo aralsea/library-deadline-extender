@@ -36,6 +36,7 @@ def move_to_my_opac_stats(driver):
     print(driver.current_url)
 
     login_UT_account(driver)
+    print(driver.current_url)
 
     # My OPACサービスをクリック
     time.sleep(3)

@@ -30,7 +30,6 @@ def run():
 
     extend_due_date(driver=driver, lendings=lendings)
 
-    lendings = load_lending_data(driver=driver)
     notifiy_lendings_list(webhook=webhook, lendings=lendings)
 
     logout_from_my_opac(driver=driver)

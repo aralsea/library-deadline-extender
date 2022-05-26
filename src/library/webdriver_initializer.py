@@ -1,5 +1,10 @@
-# import chromedriver_binary  # noqa
+import os
+
 from selenium import webdriver
+
+is_heroku = os.environ.get("PYTHONHOME") == "/app/.heroku/python"
+if not is_heroku:
+    import chromedriver_binary  # noqa
 
 
 def init_webdriver():
@@ -17,8 +22,11 @@ def init_webdriver():
 
     # Selenium Server に接続する
     print("connectiong to remote browser...")
-    driver = webdriver.Chrome(
-        executable_path=driver_path,
-        options=options,
-    )
+    if is_heroku:
+        driver = webdriver.Chrome(
+            executable_path=driver_path,
+            options=options,
+        )
+    else:
+        driver = webdriver.Chrome(options=options)
     return driver

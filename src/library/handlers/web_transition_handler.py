@@ -81,7 +81,7 @@ class WebTransitionHandler:
         assert (
             self.driver.current_url
             == "https://opac.dl.itc.u-tokyo.ac.jp/opac/opac_search/"
-        ), "current page is not opac top page."
+        ), "Current page is not opac top page."
 
         # ログアウトボタンがないならログインできていない．
         assert bool(
@@ -91,6 +91,40 @@ class WebTransitionHandler:
         ), "Faild to move to the top page of opac with login."
 
         print(f"current url = {self.driver.current_url}")
+        print()
+
+    def move_to_my_lendings_status(self) -> None:
+        assert (
+            self.driver.current_url
+            == "https://opac.dl.itc.u-tokyo.ac.jp/opac/opac_search/"
+        ), "Current page is not opac top page."
+
+        # ログアウトボタンがないならログインできていない．
+        assert bool(
+            self.driver.find_element(
+                by=By.XPATH, value="//*[@id='header']/div[2]/div[2]/div[2]/span/button"
+            )
+        ), "You have not logged in yet."
+
+        my_opac_button = self.driver.find_element(
+            by=By.XPATH, value="//*[@id='us_service']"
+        )
+        my_opac_button.click()
+        time.sleep(3)
+        my_lendings_status_button = self.driver.find_element(
+            by=By.XPATH,
+            value="//*[@id='us_service-menu']/li/div/div/ul[1]/li[1]/a",
+        )
+        my_lendings_status_button.click()
+        time.sleep(3)
+
+        assert (
+            self.driver.current_url
+            == "https://opac.dl.itc.u-tokyo.ac.jp/opac/odr_stat/?lang=0"
+        ), "Can't move to my lendings status page."
+
+        print("Moved to my lendings page.")
+        print(self.driver.current_url)
         print()
 
     def login_by_UT_account(self) -> None:

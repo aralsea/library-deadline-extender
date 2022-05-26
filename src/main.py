@@ -47,12 +47,13 @@ def test_web_transition_handler():
     web_transition_handler = WebTransitionHandler(
         is_heroku=is_heroku,
         is_detached=True,
-        is_headless=True,
+        is_headless=False,
         wait_seconds=3,
     )
 
     web_transition_handler.move_to_opac_top_without_login()
     web_transition_handler.move_to_opac_top_with_login()
+    web_transition_handler.move_to_my_lendings_status()
 
 
 if __name__ == "__main__":

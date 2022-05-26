@@ -39,10 +39,6 @@ def move_to_my_opac_stats(driver):
     print(driver.current_url)
 
     # My OPACサービスをクリック
-    time.sleep(3)
-    assert (
-        driver.current_url == "https://opac.dl.itc.u-tokyo.ac.jp/opac/opac_search/"
-    ), "current page is not opac top page."
 
     my_opac_buttun = driver.find_element(by=By.XPATH, value="//*[@id='us_service']")
     my_opac_buttun.click()

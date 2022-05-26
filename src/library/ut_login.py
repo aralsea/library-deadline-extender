@@ -20,7 +20,10 @@ def login_UT_account(driver: webdriver.Chrome) -> None:
 
     ut_id_form.send_keys(ut_id)
     ut_password_form.send_keys(ut_password)
+    time.sleep(3)
     ut_submit_button.click()
-
-    print(driver.current_url)
+    time.sleep(3)
+    assert (
+        driver.current_url == "https://opac.dl.itc.u-tokyo.ac.jp/opac/opac_search/"
+    ), "current page is not opac top page."
     return

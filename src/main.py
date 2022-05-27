@@ -57,8 +57,14 @@ def test_handlers():
     web_transition_handler.move_to_my_lending_status()
 
     lending_data_handler = LendingDataHandler()
-    lending_data_handler.load_lending_data_from_opac(web_transition_handler.driver)
+    lending_data_handler.load_lending_data_from_opac(
+        driver=web_transition_handler.driver
+    )
     lending_data_handler.output_lending_data()
+
+    web_transition_handler.extend_due_date_of_given_lendings(
+        lendings=lending_data_handler.lendings
+    )
 
 
 if __name__ == "__main__":

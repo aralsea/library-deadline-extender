@@ -1,8 +1,13 @@
 import os
 import time
+from datetime import date, timedelta
+from typing import List
 
+from data_structure.lending import Lending
 from selenium import webdriver
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
+from utils.lending_utils import load_lending_from_list
 
 is_heroku = os.environ.get("PYTHONHOME") == "/app/.heroku/python"
 if not is_heroku:
@@ -126,9 +131,96 @@ class WebTransitionHandler:
             == "https://opac.dl.itc.u-tokyo.ac.jp/opac/odr_stat/?lang=0"
         ), "Can't move to my lending status page."
 
-        print("Moved to my lending page.")
+        print("Moved to my lending status page.")
         print(f"cuurent url = {self.driver.current_url}")
         print()
+
+    def extend_due_date_of_given_lendings(self, lendings: List[Lending]) -> None:
+        assert (
+            self.driver.current_url
+            == "https://opac.dl.itc.u-tokyo.ac.jp/opac/odr_stat/?lang=0"
+        ), "Current page is not my lending status page."
+
+        check_counter = 0
+        for lending in lendings:
+            # 期限の前の日で，かつ延長可能ならば延長のチェックボックスを埋める
+            print(lending.book_name)
+            print(f"remaining_days = {lending.due_date - date.today()}")
+            print()
+            if lending.is_extendable and lending.due_date - date.today() <= timedelta(
+                days=1
+            ):
+                if self.fill_checkbox_of_given_lending(lending):
+                    # チェックボックスを埋めることに成功した場合
+                    check_counter += 1
+
+        if check_counter:  # チェックが空でない場合，延長を実行
+            extend_button = self.driver.find_element(
+                by=By.XPATH, value="//*[@id='srv_odr_stat_re']/p[1]/input[2]"
+            )
+            extend_button.click()
+
+        time.sleep(3)
+
+        assert (
+            self.driver.current_url
+            == "https://opac.dl.itc.u-tokyo.ac.jp/opac/odr_stat/?lang=0"
+        ), "Can't move to my lending status page."
+
+        print("Moved to my lending status page.")
+        print(f"cuurent url = {self.driver.current_url}")
+        print()
+
+    def fill_checkbox_of_given_lending(self, lending: Lending) -> bool:
+        assert (
+            self.driver.current_url
+            == "https://opac.dl.itc.u-tokyo.ac.jp/opac/odr_stat/?lang=0"
+        ), "Current page is not my lending status page."
+
+        target_checkout_date = lending.checkout_date
+        target_book_ID = lending.book_ID
+
+        tableElem = self.driver.find_element(
+            by=By.XPATH, value="//*[@id='datatables_re']"
+        )
+
+        trs = tableElem.find_elements(by=By.TAG_NAME, value="tr")
+        # ヘッダ行は除いて取得
+
+        for i in range(1, len(trs)):
+            tds = trs[i].find_elements(by=By.TAG_NAME, value="td")
+            lending_data = []
+            line = ""
+            for j in range(0, len(tds)):
+                lending_data.append(tds[j].text)
+                if j < len(tds) - 1:
+                    line += f"{tds[j].text} | "
+                else:
+                    line += f"{tds[j].text}"
+            # print(line + "\r\n")
+            is_extendable = True
+            click_dropdown = tds[0]
+            click_dropdown.click()
+
+            try:
+                tds[0].find_element(by=By.TAG_NAME, value="input")
+            except NoSuchElementException:
+                is_extendable = False
+
+            click_dropdown.click()
+            candidate = load_lending_from_list(lending_data, is_extendable)
+            if (
+                candidate.book_ID == target_book_ID
+                and candidate.checkout_date == target_checkout_date
+                and is_extendable
+            ):
+                checkbox = tds[0].find_element(by=By.TAG_NAME, value="input")
+                checkbox.click()
+                close_dropdown = tds[0]
+                close_dropdown.click()
+                return True
+
+        return False
 
     def login_by_UT_account(self) -> None:
         ut_id_form = self.driver.find_element(
@@ -150,5 +242,5 @@ class WebTransitionHandler:
         assert (
             self.driver.current_url
             == "https://opac.dl.itc.u-tokyo.ac.jp/opac/opac_search/"
-        ), "current page is not opac top page."
+        ), "Current page is not opac top page."
         print("Passed UT account authentification.")

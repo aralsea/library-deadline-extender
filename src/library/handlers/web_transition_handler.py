@@ -25,6 +25,7 @@ class WebTransitionHandler:
         options = webdriver.ChromeOptions()
         if is_headless or is_heroku:
             options.add_argument("--headless")
+            options.add_argument("--window-size=1920, 1080")
 
         if is_detached and not is_heroku:
             options.add_experimental_option("detach", True)

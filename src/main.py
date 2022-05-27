@@ -3,6 +3,7 @@ import os
 from slack_sdk.webhook import WebhookClient
 
 from library.auto_extender import extend_due_date
+from library.handlers.lending_data_handler import LendingDataHandler
 from library.handlers.web_transition_handler import WebTransitionHandler
 from library.lending_data_loader import load_lending_data
 from library.my_opac_login import move_to_my_opac_stats
@@ -42,19 +43,23 @@ def test_environment_variable():
     print(os.environ.get("SLACK_WEBHOOK_URL"))
 
 
-def test_web_transition_handler():
+def test_handlers():
     is_heroku = os.environ.get("PYTHONHOME") == "/app/.heroku/python"
     web_transition_handler = WebTransitionHandler(
         is_heroku=is_heroku,
-        is_detached=True,
-        is_headless=False,
+        is_detached=False,
+        is_headless=True,
         wait_seconds=3,
     )
 
     web_transition_handler.move_to_opac_top_without_login()
     web_transition_handler.move_to_opac_top_with_login()
-    web_transition_handler.move_to_my_lendings_status()
+    web_transition_handler.move_to_my_lending_status()
+
+    lending_data_handler = LendingDataHandler()
+    lending_data_handler.load_lending_data_from_opac(web_transition_handler.driver)
+    lending_data_handler.output_lending_data()
 
 
 if __name__ == "__main__":
-    test_web_transition_handler()
+    test_handlers()

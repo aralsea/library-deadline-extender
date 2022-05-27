@@ -1,6 +1,7 @@
 import os
 import time
 from datetime import date, timedelta
+from pydoc import cli
 from typing import List
 
 from data_structure.lending import Lending
@@ -51,9 +52,7 @@ class WebTransitionHandler:
 
     def move_to_opac_top_without_login(self) -> None:
         # to do:もしログインしていたらログアウトする処理
-
         time.sleep(self.wait_seconds)
-
         self.driver.get("https://opac.dl.itc.u-tokyo.ac.jp/opac/opac_search/")
 
         time.sleep(self.wait_seconds)
@@ -61,6 +60,17 @@ class WebTransitionHandler:
             self.driver.current_url
             == "https://opac.dl.itc.u-tokyo.ac.jp/opac/opac_search/"
         ), "Can't move to the top page of opac."
+
+        try:
+            logout_button = self.driver.find_element(
+                by=By.XPATH,
+                value="//*[@id='header']/div[2]/div[2]/div[2]/span/button",
+            )
+            logout_button.click()
+            print("Logout succeeded!")
+            print()
+        except NoSuchElementException:
+            pass
         print("Moved to the top page of opac without login.")
         print(f"current url = {self.driver.current_url}")
         print()
@@ -91,11 +101,12 @@ class WebTransitionHandler:
         ), "Current page is not opac top page."
 
         # ログアウトボタンがないならログインできていない．
-        assert bool(
+        try:
             self.driver.find_element(
                 by=By.XPATH, value="//*[@id='header']/div[2]/div[2]/div[2]/span/button"
             )
-        ), "Faild to move to the top page of opac with login."
+        except NoSuchElementException:
+            print("Faild to move to the top page of opac with login.")
 
         print("Login succeeded!")
         print(f"current url = {self.driver.current_url}")
@@ -133,6 +144,13 @@ class WebTransitionHandler:
 
         print("Moved to my lending status page.")
         print(f"cuurent url = {self.driver.current_url}")
+        print()
+
+    def quit(self) -> None:
+        self.move_to_opac_top_without_login()
+        self.driver.close()
+        self.driver.quit()
+        print("quit.")
         print()
 
     def extend_due_date_of_given_lendings(self, lendings: List[Lending]) -> None:

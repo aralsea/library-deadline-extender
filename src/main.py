@@ -1,4 +1,6 @@
 import os
+import turtle
+from operator import truediv
 
 from slack_sdk.webhook import WebhookClient
 
@@ -47,8 +49,8 @@ def test_handlers():
     is_heroku = os.environ.get("PYTHONHOME") == "/app/.heroku/python"
     web_transition_handler = WebTransitionHandler(
         is_heroku=is_heroku,
-        is_detached=False,
-        is_headless=True,
+        is_detached=True,
+        is_headless=False,
         wait_seconds=3,
     )
 
@@ -65,6 +67,8 @@ def test_handlers():
     web_transition_handler.extend_due_date_of_given_lendings(
         lendings=lending_data_handler.lendings
     )
+
+    web_transition_handler.quit()
 
 
 if __name__ == "__main__":

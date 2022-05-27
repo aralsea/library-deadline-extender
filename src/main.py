@@ -46,8 +46,8 @@ def test_web_transition_handler():
     is_heroku = os.environ.get("PYTHONHOME") == "/app/.heroku/python"
     web_transition_handler = WebTransitionHandler(
         is_heroku=is_heroku,
-        is_detached=True,
-        is_headless=False,
+        is_detached=False,
+        is_headless=True,
         wait_seconds=3,
     )
 

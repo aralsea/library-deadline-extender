@@ -18,6 +18,7 @@ class WebTransitionHandler:
         wait_seconds: int,
     ) -> None:
         self.wait_seconds = wait_seconds
+
         # webdriverを設定
         driver_path = "/app/.chromedriver/bin/chromedriver"
 

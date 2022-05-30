@@ -62,7 +62,7 @@ def check_current_lendings():
 
 
 def run():
-    extend_due_date()
+    # extend_due_date()
     check_current_lendings()
 
 

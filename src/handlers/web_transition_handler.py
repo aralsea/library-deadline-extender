@@ -36,13 +36,15 @@ class WebTransitionHandler:
         options = webdriver.ChromeOptions()
         if is_headless or is_heroku:
             options.add_argument("--headless")
-            options.add_argument("--window-size=1920, 1080")
+            options.add_argument("--disable-gpu")
+            options.add_argument("--window-size=950, 800")
+            options.add_argument("--no-sandbox")
 
         if is_detached and not is_heroku:
             options.add_experimental_option("detach", True)
 
         # Selenium Server に接続する
-        print("connectiong to remote browser...")
+        print("connecting to remote browser...")
         if is_heroku:
             self.driver = webdriver.Chrome(
                 executable_path=driver_path,

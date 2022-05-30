@@ -50,7 +50,7 @@ class NotificationHandler:
                 text=f"{datetime.now().strftime('%Y年%m月%d日 %H:%M:%S')}更新\n図書の延長はありませんでした．",
             )
             print(f"status: {response.status_code} body: {response.body}")
-            print("There is no updated lending.")
+            print("There is no updated lendings.")
             print()
             return
 

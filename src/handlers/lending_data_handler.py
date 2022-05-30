@@ -1,3 +1,4 @@
+import time
 from typing import List
 
 from data_structure.lending import Lending
@@ -30,6 +31,7 @@ class LendingDataHandler:
             == "https://opac.dl.itc.u-tokyo.ac.jp/opac/odr_stat/?lang=0"
         ), "Current page is not my lending status page."
 
+        time.sleep(3)
         get_screenshot = driver.get_screenshot_as_file(
             "./src/outputs/my_lending_status.png"
         )

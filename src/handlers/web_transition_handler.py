@@ -37,8 +37,9 @@ class WebTransitionHandler:
         if is_headless or is_heroku:
             options.add_argument("--headless")
             options.add_argument("--disable-gpu")
-            options.add_argument("--window-size=1920, 1080")
+            options.add_argument("--window-size=1000, 1080")
             options.add_argument("--no-sandbox")
+            options.add_argument("--disable-dev-shm-usage")
 
         if is_detached and not is_heroku:
             options.add_experimental_option("detach", True)

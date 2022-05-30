@@ -1,11 +1,10 @@
 import os
-import turtle
-from operator import truediv
 
 from slack_sdk.webhook import WebhookClient
 
 from library.auto_extender import extend_due_date
 from library.handlers.lending_data_handler import LendingDataHandler
+from library.handlers.NotificationHandler import NotificationHandler
 from library.handlers.web_transition_handler import WebTransitionHandler
 from library.lending_data_loader import load_lending_data
 from library.my_opac_login import move_to_my_opac_stats
@@ -49,8 +48,8 @@ def test_handlers():
     is_heroku = os.environ.get("PYTHONHOME") == "/app/.heroku/python"
     web_transition_handler = WebTransitionHandler(
         is_heroku=is_heroku,
-        is_detached=True,
-        is_headless=False,
+        is_detached=False,
+        is_headless=True,
         wait_seconds=3,
     )
 
@@ -63,6 +62,12 @@ def test_handlers():
         driver=web_transition_handler.driver
     )
     lending_data_handler.output_lending_data()
+
+    notification_handler = NotificationHandler()
+    notification_handler.post_current_lendings(lendings=lending_data_handler.lendings)
+    notification_handler.post_updated_lendings(
+        updated_lendings=lending_data_handler.lendings
+    )
 
     web_transition_handler.extend_due_date_of_given_lendings(
         lendings=lending_data_handler.lendings

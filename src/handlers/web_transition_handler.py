@@ -1,7 +1,6 @@
 import os
 import time
 from datetime import date, timedelta
-from pydoc import cli
 from typing import List
 
 from data_structure.lending import Lending
@@ -23,6 +22,12 @@ class WebTransitionHandler:
         is_headless: bool,
         wait_seconds: int,
     ) -> None:
+        self.ut_id = os.environ.get("UT_USER_NAME")
+        self.ut_password = os.environ.get("UT_PASSWORD")
+
+        if not self.ut_id or not self.ut_password:
+            raise Exception("Some Environment variables are missing.")
+
         self.wait_seconds = wait_seconds
 
         # webdriverを設定
@@ -47,8 +52,6 @@ class WebTransitionHandler:
             self.driver = webdriver.Chrome(options=options)
 
         self.driver.implicitly_wait(self.wait_seconds)
-        self.ut_id = os.environ.get("UT_USER_NAME")
-        self.ut_password = os.environ.get("UT_PASSWORD")
 
     def move_to_opac_top_without_login(self) -> None:
         # to do:もしログインしていたらログアウトする処理

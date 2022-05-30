@@ -78,7 +78,8 @@ class WebTransitionHandler:
         print(f"current url = {self.driver.current_url}")
         print()
 
-    def move_to_opac_top_with_login(self) -> None:
+    def login_to_opac(self) -> None:
+
         time.sleep(self.wait_seconds)
         assert (
             self.driver.current_url
@@ -156,13 +157,15 @@ class WebTransitionHandler:
         print("quit.")
         print()
 
-    def extend_due_date_of_given_lendings(self, lendings: List[Lending]) -> None:
+    def extend_due_date_of_given_lendings(
+        self, lendings: List[Lending]
+    ) -> List[Lending]:
         assert (
             self.driver.current_url
             == "https://opac.dl.itc.u-tokyo.ac.jp/opac/odr_stat/?lang=0"
         ), "Current page is not my lending status page."
 
-        check_counter = 0
+        updated_lendings: List[Lending] = []
         for lending in lendings:
             # 期限の前の日で，かつ延長可能ならば延長のチェックボックスを埋める
             print(lending.book_name)
@@ -173,9 +176,9 @@ class WebTransitionHandler:
             ):
                 if self.fill_checkbox_of_given_lending(lending):
                     # チェックボックスを埋めることに成功した場合
-                    check_counter += 1
+                    updated_lendings.append(lending)
 
-        if check_counter:  # チェックが空でない場合，延長を実行
+        if updated_lendings:  # チェックが空でない場合，延長を実行
             extend_button = self.driver.find_element(
                 by=By.XPATH, value="//*[@id='srv_odr_stat_re']/p[1]/input[2]"
             )
@@ -191,6 +194,7 @@ class WebTransitionHandler:
         print("Moved to my lending status page.")
         print(f"cuurent url = {self.driver.current_url}")
         print()
+        return updated_lendings
 
     def fill_checkbox_of_given_lending(self, lending: Lending) -> bool:
         assert (

@@ -1,8 +1,5 @@
-import re
-from datetime import datetime
 from typing import List
 
-from constants.library import Library
 from data_structure.lending import Lending
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException

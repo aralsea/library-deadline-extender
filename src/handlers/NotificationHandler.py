@@ -42,8 +42,18 @@ class NotificationHandler:
             attachments=attachments,
         )
         print(f"status: {response.status_code} body: {response.body}")
+        print()
 
     def post_updated_lendings(self, updated_lendings: List[Lending]) -> None:
+        if not updated_lendings:
+            response = self.webhook.send(
+                text=f"{datetime.now().strftime('%Y年%m月%d日 %H:%M:%S')}更新\n図書の延長はありませんでした．",
+            )
+            print(f"status: {response.status_code} body: {response.body}")
+            print("There is no updated lending.")
+            print()
+            return
+
         attachments = []
         for lending in updated_lendings:
             book_title = {"title": f"{lending.book_name}"}
@@ -66,3 +76,4 @@ class NotificationHandler:
             attachments=attachments,
         )
         print(f"status: {response.status_code} body: {response.body}")
+        print()

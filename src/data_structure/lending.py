@@ -25,6 +25,11 @@ class Lending:
         self.extend_counter = extend_counter
         self.is_extendable = is_extendable
 
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Lending):
+            return NotImplemented
+        return self.book_ID == other.book_ID and self.library == other.library
+
     def can_be_extendable(self) -> bool:
         return (
             (date.today() <= self.due_date)

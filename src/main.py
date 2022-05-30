@@ -1,16 +1,16 @@
 import os
 
-from slack_sdk.webhook import WebhookClient
-
 from library.auto_extender import extend_due_date
-from library.handlers.lending_data_handler import LendingDataHandler
-from library.handlers.NotificationHandler import NotificationHandler
-from library.handlers.web_transition_handler import WebTransitionHandler
 from library.lending_data_loader import load_lending_data
 from library.my_opac_login import move_to_my_opac_stats
 from library.my_opac_logout import logout_from_my_opac
 from library.notification_sender import notifiy_lendings_list
 from library.webdriver_initializer import init_webdriver
+from slack_sdk.webhook import WebhookClient
+
+from handlers.lending_data_handler import LendingDataHandler
+from handlers.NotificationHandler import NotificationHandler
+from handlers.web_transition_handler import WebTransitionHandler
 
 
 def run():

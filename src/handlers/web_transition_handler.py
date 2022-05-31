@@ -271,4 +271,4 @@ class WebTransitionHandler:
             self.driver.current_url
             == "https://opac.dl.itc.u-tokyo.ac.jp/opac/opac_search/"
         ), "Current page is not opac top page."
-        print("Passed UT account authentification.")
+        print("Passed UT account authentication.")

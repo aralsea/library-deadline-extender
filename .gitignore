@@ -161,4 +161,5 @@ cython_debug/
 src/outputs/my_lending_status.png
 .vscode
 bin/
+env.yml
 

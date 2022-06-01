@@ -11,7 +11,8 @@ from utils.lending_utils import load_lending_from_list
 
 is_heroku = os.environ.get("PYTHONHOME") == "/app/.heroku/python"
 if not is_heroku:
-    import chromedriver_binary  # noqa
+    # import chromedriver_binary  # noqa
+    pass
 
 
 class WebTransitionHandler:
@@ -40,9 +41,12 @@ class WebTransitionHandler:
             options.add_argument("--window-size=1000, 1080")
             options.add_argument("--no-sandbox")
             options.add_argument("--disable-dev-shm-usage")
+            options.add_argument("--single-process")
 
         if is_detached and not is_heroku:
             options.add_experimental_option("detach", True)
+
+        options.binary_location = os.getcwd() + "/bin/headless-chromium"
 
         # Selenium Server に接続する
         print("connecting to remote browser...")
@@ -52,7 +56,9 @@ class WebTransitionHandler:
                 options=options,
             )
         else:
-            self.driver = webdriver.Chrome(options=options)
+            self.driver = webdriver.Chrome(
+                executable_path=os.getcwd() + "/bin/chromedriver", options=options
+            )
 
         self.driver.implicitly_wait(self.wait_seconds)
 

@@ -1,9 +1,11 @@
 import os
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 from typing import List
 
 from data_structure.lending import Lending
 from slack_sdk.webhook import WebhookClient
+
+JST = timezone(timedelta(hours=+9), "JST")
 
 
 class NotificationHandler:
@@ -38,7 +40,7 @@ class NotificationHandler:
             attachments.append(lending_dict)
 
         response = self.webhook.send(
-            text=f"{datetime.now().strftime('%Y年%m月%d日 %H:%M:%S')}",
+            text=f"{datetime.now(JST).strftime('%Y年%m月%d日 %H:%M:%S')}",
             attachments=attachments,
         )
         print(f"status: {response.status_code} body: {response.body}")
@@ -47,7 +49,10 @@ class NotificationHandler:
     def post_updated_lendings(self, updated_lendings: List[Lending]) -> None:
         if not updated_lendings:
             response = self.webhook.send(
-                text=f"{datetime.now().strftime('%Y年%m月%d日 %H:%M:%S')}更新\n図書の延長はありませんでした．",
+                text=(
+                    f"{datetime.now(JST).strftime('%Y年%m月%d日 %H:%M:%S')}更新"
+                    "\n図書の延長はありませんでした．"
+                ),
             )
             print(f"status: {response.status_code} body: {response.body}")
             print("There is no updated lendings.")
@@ -72,7 +77,10 @@ class NotificationHandler:
             attachments.append(lending_dict)
 
         response = self.webhook.send(
-            text=f"{datetime.now().strftime('%Y年%m月%d日 %H:%M:%S')}更新\n以下の図書の期限を延長しました",
+            text=(
+                f"{datetime.now(JST).strftime('%Y年%m月%d日 %H:%M:%S')}更新"
+                "\n以下の図書の期限を延長しました"
+            ),
             attachments=attachments,
         )
         print(f"status: {response.status_code} body: {response.body}")

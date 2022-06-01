@@ -1,0 +1,20 @@
+version: '3.9'
+
+services:
+  algorithm:
+    platform: linux/x86_64
+    container_name: library-deadline-extender
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    image: library-deadline-extender
+    volumes:
+      - ./src:/src
+      - ./.vscode:/src/.vscode
+    stdin_open: true
+    tty: true
+    environment:
+      - PYTHONPATH=/src
+      - SLACK_WEBHOOK_URL=$SLACK_WEBHOOK_URL
+      - UT_USER_NAME=$UT_USER_NAME
+      - UT_PASSWORD=$UT_PASSWORD

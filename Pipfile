@@ -4,9 +4,9 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-selenium = "*"
+selenium = "==3.13.0"
 slack-sdk = "*"
-chromedriver-binary = "==100.0.4896.60.0"
+chromedriver-binary = "==102.0.5005.61"
 
 [dev-packages]
 flake8 = "*"
@@ -14,7 +14,7 @@ mypy = "*"
 black = "*"
 
 [requires]
-python_version = "3.10"
+python_version = "3.9"
 
 [pipenv]
 allow_prereleases = true

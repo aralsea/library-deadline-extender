@@ -39,7 +39,12 @@ class LendingDataHandler:
         print(f"get screenshot : {get_screenshot}")
 
         self.lendings.clear()
-        tableElem = driver.find_element(by=By.XPATH, value="//*[@id='datatables_re']")
+
+        try:
+            tableElem = driver.find_element(by=By.XPATH, value="//*[@id='datatables_re']")
+        except NoSuchElementException:
+            print("You are NOT lending books.")
+            return
 
         trs = tableElem.find_elements(by=By.TAG_NAME, value="tr")
         # ヘッダ行は除いて取得

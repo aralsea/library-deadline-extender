@@ -66,5 +66,10 @@ def run():
     check_current_lendings()
 
 
+def main(data, context):
+    extend_due_date()
+    check_current_lendings()
+
+
 if __name__ == "__main__":
     run()

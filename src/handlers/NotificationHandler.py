@@ -16,6 +16,17 @@ class NotificationHandler:
             raise Exception("SLACK_WEBHOOK_URL is not set.")
 
     def post_current_lendings(self, lendings: List[Lending]) -> None:
+        if not lendings:
+            response = self.webhook.send(
+                text=(
+                    f"{datetime.now(JST).strftime('%Y年%m月%d日 %H:%M:%S')}更新"
+                    "\n図書を借りていません"
+                ),
+            )
+            print(f"status: {response.status_code} body: {response.body}")
+            print("There is no updated lendings.")
+            print()
+            return
         attachments = []
         for lending in lendings:
             book_title = {"title": f"{lending.book_name}"}
